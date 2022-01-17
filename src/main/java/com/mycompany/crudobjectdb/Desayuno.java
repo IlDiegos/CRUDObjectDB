@@ -4,7 +4,7 @@
  */
 package com.mycompany.crudobjectdb;
 
-import java.util.ArrayList;
+
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,9 +23,8 @@ public class Desayuno {
 
     Scanner sc = new Scanner(System.in);
 
-    java.util.Date utilDate = new java.util.Date();
-    long lnMilisegundos = utilDate.getTime();
-    java.sql.Date sqlDate = new java.sql.Date(lnMilisegundos);
+   java.util.Date ahora = new java.util.Date();
+   java.sql.Date sqlDate = new java.sql.Date(ahora.getTime());
 
     static {
         emf = Persistence.createEntityManagerFactory("db.odb");
@@ -116,9 +115,14 @@ public class Desayuno {
         Pedido p = new Pedido();
         EntityManager em = emf.createEntityManager();
         
+        
+        
         TypedQuery<Pedido> q = em.createQuery("SELECT p from Pedido p", Pedido.class);
-
+        
+        
         var pedido = q.getResultList();
+        
+        if(pedido != null){
 
         pedido.forEach((aa) -> System.out.println(aa));
 
@@ -132,6 +136,13 @@ public class Desayuno {
         em.persist(p);
         em.getTransaction().commit();
         em.close();
+        
+        }else{
+            System.out.println("No hay pedidos para marcar.");
+        }
+       
+        
+        
 
         
         //static final String RECOGIDO = "UPDATE pedidos set recogido=1 where id=?";
@@ -156,12 +167,16 @@ public class Desayuno {
     
     public void mostrarHoy(){
         EntityManager em = emf.createEntityManager();
-        TypedQuery<Pedido> p = em.createQuery("SELECT p FROM Pedido p WHERE fecha= :p and recogido=false", Pedido.class);
-
+        TypedQuery<Pedido> p = em.createQuery("SELECT p FROM Pedido p WHERE fecha = :fecha and recogido=false", Pedido.class);
+        p.setParameter("fecha", sqlDate);
         var pedido = p.getResultList();
+        if(pedido != null){
         em.close();
 
         pedido.forEach((aa) -> System.out.println(aa));
+        }else{
+            System.out.println("No hay pedidos que mostrar.");
+        }
     }
 
     public void mostrarCarta() {
