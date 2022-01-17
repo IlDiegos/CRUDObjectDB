@@ -4,7 +4,6 @@
  */
 package com.mycompany.crudobjectdb;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import models.Carta;
